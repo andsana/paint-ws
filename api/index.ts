@@ -14,7 +14,11 @@ app.use(cors());
 const router = express.Router();
 
 const activeConnections: ActiveConnections = {};
-const drawnPixels: Pixel[] = [];
+const drawnPixels: Pixel[] = [
+  {x: 20, y: 20},
+  {x: 30, y: 30},
+  {x: 40, y: 40},
+];
 
 router.ws('/paint', (ws) => {
   const id = crypto.randomUUID();
@@ -26,7 +30,7 @@ router.ws('/paint', (ws) => {
   ws.on('message', (messageData) => {
     const parsedMessage = JSON.parse(messageData.toString()) as IncomingMessage;
 
-    if (parsedMessage.type === 'DRAWN_PIXELS') {
+    if (parsedMessage.type === 'DRAW_PIXELS') {
       for (const pixel of parsedMessage.payload) {
         const existing = drawnPixels.find(p => p.x === pixel.x && p.y === pixel.y)
         if (!existing) {
